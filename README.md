@@ -23,7 +23,9 @@ system.
 - **Semantic highlighting** provided by the compiler.
 - **Run / test** commands that invoke the Flix CLI from the project root.
 - **REPL** integration: start a project-scoped Flix REPL, and run entry points
-  directly from the "Run" code lens.
+  directly from the "Run" code lens. The REPL buffer has minimal standalone
+  syntax highlighting (keywords, types, comments, strings) and `C-j` / `C-k`
+  history navigation.
 
 ## Requirements
 

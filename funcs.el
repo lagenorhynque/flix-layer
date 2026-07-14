@@ -55,11 +55,40 @@ Reuse the jar resolved by flix-mode and run from the project root."
 (defconst flix--repl-prompt-regexp "flix> "
   "Regexp matching the Flix REPL prompt.")
 
+(defconst flix--repl-font-lock-keywords
+  (let ((keywords '("def" "pub" "let" "if" "else" "match" "case" "type"
+                    "enum" "struct" "trait" "instance" "import" "use" "mod"
+                    "law" "sealed" "with" "without" "as" "forall" "for"
+                    "foreach" "yield" "do" "try" "catch" "throw" "spawn"
+                    "par" "region" "new" "eff" "lazy" "force" "discard"
+                    "and" "or" "not" "select" "from" "into" "where" "query"
+                    "solve" "inject" "project" "ref" "deref"))
+        (types '("Unit" "Bool" "Char" "Float32" "Float64" "BigDecimal"
+                 "Int8" "Int16" "Int32" "Int64" "BigInt" "String"))
+        (constants '("true" "false")))
+    `((,(regexp-opt keywords 'symbols) . font-lock-keyword-face)
+      (,(regexp-opt types 'symbols) . font-lock-type-face)
+      (,(regexp-opt constants 'symbols) . font-lock-constant-face)))
+  "Minimal font-lock keywords for the Flix REPL.
+flix-mode itself carries no font-lock rules -- it relies entirely on the
+LSP server's semantic tokens, which are unavailable in the REPL buffer --
+so these give the REPL a small amount of standalone highlighting.")
+
 (define-derived-mode flix-repl-mode comint-mode "Flix-REPL"
   "Major mode for the Flix REPL buffer.
 Derives from `comint-mode' so the standard input ring and editing
 commands are available.  Key bindings are set in `packages.el'."
-  (setq-local comint-prompt-regexp flix--repl-prompt-regexp))
+  (setq-local comint-prompt-regexp flix--repl-prompt-regexp)
+  ;; Keep submitted input syntax-highlighted: `comint-send-input' otherwise
+  ;; overwrites it with `comint-highlight-input' (bold) and marks it as
+  ;; non-refontifiable, wiping the per-token colors.  We trade comint's bold
+  ;; styling of past input for persistent highlighting.
+  (setq-local comint-highlight-input nil)
+  ;; C-style comments; strings inherit the standard double-quote syntax.
+  (modify-syntax-entry ?/ ". 124b")
+  (modify-syntax-entry ?* ". 23")
+  (modify-syntax-entry ?\n "> b")
+  (setq-local font-lock-defaults '(flix--repl-font-lock-keywords)))
 
 (defun flix//repl-live-buffer (root)
   "Return the live Flix REPL buffer for ROOT, or nil if none is running."
