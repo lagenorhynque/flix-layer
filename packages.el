@@ -42,9 +42,13 @@
     :config
     ;; Place run/test under the c prefix (single-key r/t are used by lsp layer).
     (spacemacs/declare-prefix-for-mode 'flix-mode "mc" "compile/run")
+    (spacemacs/declare-prefix-for-mode 'flix-mode "ms" "repl")
     (spacemacs/set-leader-keys-for-major-mode 'flix-mode
+      "'" 'flix/repl
       "cr" 'flix/run
-      "ct" 'flix/test)))
+      "ct" 'flix/test
+      "si" 'flix/repl
+      "sq" 'flix/repl-quit)))
 
 (defun flix//default-directory-parent-of-root (orig-fn &rest args)
   "Set the server cwd to the parent of the workspace root in flix-mode buffers.
@@ -81,7 +85,10 @@ loads every project file (*.flix, src/**, test/**, lib/**) on initialize."
       :new-connection (lsp-stdio-connection #'flix/lsp-command)
       :activation-fn (lsp-activate-on "flix")
       :server-id 'flix-ls
-      :priority 0))))
+      :priority 0
+      ;; The server does not implement workspace/executeCommand, so handle the
+      ;; "Run" code lens (flix.runMain) on the client side via the REPL.
+      :action-handlers (ht ("flix.runMain" #'flix//lsp-action-run-main))))))
 
 (defun flix/post-init-projectile ()
   "Use flix.toml as a project root marker."

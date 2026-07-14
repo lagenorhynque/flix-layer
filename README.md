@@ -22,6 +22,8 @@ system.
   initialize, so cross-file module resolution works out of the box.
 - **Semantic highlighting** provided by the compiler.
 - **Run / test** commands that invoke the Flix CLI from the project root.
+- **REPL** integration: start a project-scoped Flix REPL, and run entry points
+  directly from the "Run" code lens.
 
 ## Requirements
 
@@ -55,13 +57,17 @@ jar for the version declared in `flix.toml`.
 
 Under the major-mode leader (`SPC m` or `,`):
 
-| Key     | Command     | Description               |
-|---------|-------------|---------------------------|
-| `, c r` | `flix/run`  | Run `flix run`            |
-| `, c t` | `flix/test` | Run `flix test`           |
+| Key     | Command          | Description                 |
+|---------|------------------|-----------------------------|
+| `, '`   | `flix/repl`      | Start / switch to the REPL  |
+| `, c r` | `flix/run`       | Run `flix run`              |
+| `, c t` | `flix/test`      | Run `flix test`             |
+| `, s i` | `flix/repl`      | Start / switch to the REPL  |
+| `, s q` | `flix/repl-quit` | Quit the REPL               |
 
-All other language features come from the `lsp` layer's standard bindings
-(e.g. `g d` for go to definition, `K` for hover, `SPC m r r` for rename).
+Clicking the **Run** code lens above an entry point runs it in the REPL. All
+other language features come from the `lsp` layer's standard bindings (e.g.
+`g d` for go to definition, `K` for hover, `SPC m r r` for rename).
 
 ## How it works
 
@@ -79,12 +85,19 @@ The layer is deliberately thin; it delegates as much as possible to
   working directory to the **parent** of the workspace root so that the scan
   resolves correctly. Without this, only the opened file is compiled and you
   get `Orphaned module` / `Undefined use` errors.
+- The server does not implement `workspace/executeCommand`, so the "Run" code
+  lens (`flix.runMain`) is handled on the client side: an action handler sends
+  `:eval <symbol>()` to a project-scoped REPL, the same approach the official
+  VS Code extension takes.
 - `flix.toml` is registered as a Projectile project root marker.
 
 ## Known limitations
 
-- Running a *single* test via a code lens is not wired up; `, c t` runs the
-  whole test suite through the CLI.
+- Test code lenses are not shown: the Flix compiler (as of v0.75.1) only emits
+  a "Run" lens for entry points, not for `@Test` functions, so there is nothing
+  for this layer to wire up. Use `, c t` to run the whole test suite.
+- `flix test` runs the entire suite; the compiler exposes no way to filter by
+  test name from the CLI or REPL, so per-test execution is not available.
 - Files created or deleted mid-session are not pushed to the server until the
   file is opened (or LSP is restarted), since there is no file-system watcher.
 
