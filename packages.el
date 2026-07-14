@@ -40,15 +40,19 @@
   (use-package flix-mode
     :after toml
     :config
-    ;; Place run/test under the c prefix (single-key r/t are used by lsp layer).
     (spacemacs/declare-prefix-for-mode 'flix-mode "mc" "compile/run")
     (spacemacs/declare-prefix-for-mode 'flix-mode "ms" "repl")
+    (spacemacs/declare-prefix-for-mode 'flix-mode "mt" "test")
     (spacemacs/set-leader-keys-for-major-mode 'flix-mode
       "'" 'flix/repl
-      "cr" 'flix/run
-      "ct" 'flix/test
+      "cc" 'flix/run
+      "ta" 'flix/test
       "si" 'flix/repl
-      "sq" 'flix/repl-quit)))
+      "sq" 'flix/repl-quit)
+    ;; REPL history navigation, following the Python/Haskell layers'
+    ;; convention: C-j moves to a newer input, C-k to an older one.
+    (define-key flix-repl-mode-map (kbd "C-j") #'comint-next-input)
+    (define-key flix-repl-mode-map (kbd "C-k") #'comint-previous-input)))
 
 (defun flix//default-directory-parent-of-root (orig-fn &rest args)
   "Set the server cwd to the parent of the workspace root in flix-mode buffers.

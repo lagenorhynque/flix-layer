@@ -60,10 +60,17 @@ Under the major-mode leader (`SPC m` or `,`):
 | Key     | Command          | Description                 |
 |---------|------------------|-----------------------------|
 | `, '`   | `flix/repl`      | Start / switch to the REPL  |
-| `, c r` | `flix/run`       | Run `flix run`              |
-| `, c t` | `flix/test`      | Run `flix test`             |
+| `, c c` | `flix/run`       | Run `flix run`              |
 | `, s i` | `flix/repl`      | Start / switch to the REPL  |
 | `, s q` | `flix/repl-quit` | Quit the REPL               |
+| `, t a` | `flix/test`      | Run `flix test`             |
+
+Inside the REPL buffer:
+
+| Key   | Command               | Description                 |
+|-------|-----------------------|-----------------------------|
+| `C-j` | `comint-next-input`   | Next item in REPL history   |
+| `C-k` | `comint-previous-input` | Previous item in REPL history |
 
 Clicking the **Run** code lens above an entry point runs it in the REPL. All
 other language features come from the `lsp` layer's standard bindings (e.g.

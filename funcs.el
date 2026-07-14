@@ -55,6 +55,12 @@ Reuse the jar resolved by flix-mode and run from the project root."
 (defconst flix--repl-prompt-regexp "flix> "
   "Regexp matching the Flix REPL prompt.")
 
+(define-derived-mode flix-repl-mode comint-mode "Flix-REPL"
+  "Major mode for the Flix REPL buffer.
+Derives from `comint-mode' so the standard input ring and editing
+commands are available.  Key bindings are set in `packages.el'."
+  (setq-local comint-prompt-regexp flix--repl-prompt-regexp))
+
 (defun flix//repl-live-buffer (root)
   "Return the live Flix REPL buffer for ROOT, or nil if none is running."
   (let ((buffer (get-buffer (format "*flix-repl: %s*" (abbreviate-file-name root)))))
@@ -63,12 +69,16 @@ Reuse the jar resolved by flix-mode and run from the project root."
 (defun flix//repl-start (root)
   "Start a Flix REPL for ROOT and return its buffer.
 The REPL runs from ROOT so it picks up the project's flix.toml."
-  (let ((default-directory root)
-        (process-name (format "flix-repl: %s" (abbreviate-file-name root)))
-        (command (flix//command-with-subcommand "repl")))
-    (apply #'make-comint-in-buffer
-           process-name (format "*%s*" process-name)
-           (car command) nil (cdr command))))
+  (let* ((default-directory root)
+         (process-name (format "flix-repl: %s" (abbreviate-file-name root)))
+         (command (flix//command-with-subcommand "repl"))
+         (buffer (apply #'make-comint-in-buffer
+                        process-name (format "*%s*" process-name)
+                        (car command) nil (cdr command))))
+    (with-current-buffer buffer
+      (unless (derived-mode-p 'flix-repl-mode)
+        (flix-repl-mode)))
+    buffer))
 
 (defun flix//repl-buffer (root)
   "Return a live Flix REPL buffer for ROOT, starting one if necessary."
