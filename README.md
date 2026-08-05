@@ -12,6 +12,13 @@ hovers, go to definition, find references, rename, inlay hints, code lenses,
 and server-provided semantic highlighting — inside the Spacemacs key-binding
 system.
 
+## Demo
+
+https://github.com/user-attachments/assets/5b784e27-05b0-4210-b76d-0e211b8b0bb2
+
+Semantic highlighting, the "Run" code lens on an entry point, and an LSP
+rename propagating across the project.
+
 ## Features
 
 - **LSP integration** via the official Flix compiler (jar), started through
