@@ -25,7 +25,7 @@
     ;; flix-mode's dependency (require 'toml).  Declared here to pin load order.
     (toml :location (recipe
                      :fetcher github
-                     :repo "mdiin/emacs-toml"))
+                     :repo "gongo/emacs-toml"))
     ;; Packages owned by other layers; configured via post-init below.
     lsp-mode
     projectile))
