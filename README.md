@@ -3,23 +3,23 @@
 A [Spacemacs](https://www.spacemacs.org/) layer for the
 [Flix](https://flix.dev/) programming language.
 
-It wires up [`flix-mode`](https://codeberg.org/mdiin/flix-mode) as the major
-mode and drives the official Flix compiler as an LSP server, giving you the
-same core language features available in the official
+## Description
+
+This layer wires up [`flix-mode`](https://codeberg.org/mdiin/flix-mode) as the
+major mode and drives the official Flix compiler as an LSP server, giving you
+the same core language features available in the official
 [VS Code](https://github.com/flix/vscode-flix) and
 [Neovim](https://github.com/flix/nvim) clients — completion, type/effect
 hovers, go to definition, find references, rename, inlay hints, code lenses,
 and server-provided semantic highlighting — inside the Spacemacs key-binding
 system.
 
-## Demo
-
 https://github.com/user-attachments/assets/5b784e27-05b0-4210-b76d-0e211b8b0bb2
 
-Semantic highlighting, the "Run" code lens on an entry point, and an LSP
-rename propagating across the project.
+*Semantic highlighting, the "Run" code lens on an entry point, and an LSP
+rename propagating across the project.*
 
-## Features
+### Features
 
 - **LSP integration** via the official Flix compiler (jar), started through
   `flix-mode`'s public API.
@@ -34,13 +34,13 @@ rename propagating across the project.
   syntax highlighting (keywords, types, comments, strings) and `C-j` / `C-k`
   history navigation.
 
-## Requirements
+## Install
+
+This layer requires:
 
 - Spacemacs with the `lsp` layer enabled.
 - **Java 21+** available on your `PATH` (the Flix compiler runs on the JVM).
 - A Flix project with a `flix.toml` in its root.
-
-## Installation
 
 Clone this repository into your private layers directory:
 
@@ -49,7 +49,8 @@ git clone https://github.com/lagenorhynque/flix-layer.git \
   ~/.emacs.d/private/flix
 ```
 
-Then enable the layer in your `.spacemacs`:
+Then add `flix` to the existing `dotspacemacs-configuration-layers` list in
+your `~/.spacemacs`:
 
 ```elisp
 dotspacemacs-configuration-layers
@@ -61,29 +62,6 @@ dotspacemacs-configuration-layers
 Restart Spacemacs (or reload the configuration with `SPC f e R`). The first
 time you open a `.flix` file, `flix-mode` offers to download the Flix compiler
 jar for the version declared in `flix.toml`.
-
-## Key bindings
-
-Under the major-mode leader (`SPC m` or `,`):
-
-| Key     | Command          | Description                 |
-|---------|------------------|-----------------------------|
-| `, '`   | `flix/repl`      | Start / switch to the REPL  |
-| `, c c` | `flix/run`       | Run `flix run`              |
-| `, s i` | `flix/repl`      | Start / switch to the REPL  |
-| `, s q` | `flix/repl-quit` | Quit the REPL               |
-| `, t a` | `flix/test`      | Run `flix test`             |
-
-Inside the REPL buffer:
-
-| Key   | Command               | Description                 |
-|-------|-----------------------|-----------------------------|
-| `C-j` | `comint-next-input`   | Next item in REPL history   |
-| `C-k` | `comint-previous-input` | Previous item in REPL history |
-
-Clicking the **Run** code lens above an entry point runs it in the REPL. All
-other language features come from the `lsp` layer's standard bindings (e.g.
-`g d` for go to definition, `K` for hover, `SPC m r r` for rename).
 
 ## Configuration
 
@@ -101,7 +79,7 @@ customize it through the packages it builds on.
   enables `lsp-semantic-tokens-enable` in Flix buffers so the compiler's
   semantic highlighting is on by default; everything else uses your existing
   `lsp` layer configuration.
-- **Key bindings** follow the Spacemacs conventions above and can be
+- **Key bindings** follow the Spacemacs conventions below and can be
   overridden the usual way, e.g. with `spacemacs/set-leader-keys-for-major-mode`
   in your `dotspacemacs/user-config`.
 
@@ -127,11 +105,34 @@ The layer is deliberately thin; it delegates as much as possible to
   VS Code extension takes.
 - `flix.toml` is registered as a Projectile project root marker.
 
+## Key bindings
+
+Under the major-mode leader (`SPC m` or `,`):
+
+| Key binding | Description                |
+|-------------|----------------------------|
+| `SPC m '`   | start / switch to the REPL |
+| `SPC m c c` | run the project (`flix run`) |
+| `SPC m s i` | start / switch to the REPL |
+| `SPC m s q` | quit the REPL              |
+| `SPC m t a` | run all tests (`flix test`) |
+
+Inside the REPL buffer:
+
+| Key binding | Description                   |
+|-------------|-------------------------------|
+| `C-j`       | next item in REPL history     |
+| `C-k`       | previous item in REPL history |
+
+Clicking the **Run** code lens above an entry point runs it in the REPL. All
+other language features come from the `lsp` layer's standard bindings (e.g.
+`g d` for go to definition, `K` for hover, `SPC m r r` for rename).
+
 ## Known limitations
 
 - Test code lenses are not shown: the Flix compiler (as of v0.75.1) only emits
   a "Run" lens for entry points, not for `@Test` functions, so there is nothing
-  for this layer to wire up. Use `, c t` to run the whole test suite.
+  for this layer to wire up. Use `SPC m t a` to run the whole test suite.
 - `flix test` runs the entire suite; the compiler exposes no way to filter by
   test name from the CLI or REPL, so per-test execution is not available.
 - Files created or deleted mid-session are not pushed to the server until the
