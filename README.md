@@ -85,6 +85,26 @@ Clicking the **Run** code lens above an entry point runs it in the REPL. All
 other language features come from the `lsp` layer's standard bindings (e.g.
 `g d` for go to definition, `K` for hover, `SPC m r r` for rename).
 
+## Configuration
+
+The layer is intentionally thin and adds no variables of its own; you
+customize it through the packages it builds on.
+
+- **Compiler / jar management** is handled by `flix-mode`. Its customize group
+  `flix-mode` (browse it with `M-x customize-group RET flix-mode RET`) exposes:
+    - `flix-mode-download-dir` — where jars are downloaded
+    - `flix-mode-jar-name` — the jar file name
+    - `flix-mode-releases-url` — where Flix releases are fetched from
+    - `flix-mode-project-file` — the project file (`flix.toml` by default)
+- **LSP behavior** (inlay hints, code lenses, semantic tokens, completion,
+  and so on) is controlled by the standard `lsp-mode` variables. The layer
+  enables `lsp-semantic-tokens-enable` in Flix buffers so the compiler's
+  semantic highlighting is on by default; everything else uses your existing
+  `lsp` layer configuration.
+- **Key bindings** follow the Spacemacs conventions above and can be
+  overridden the usual way, e.g. with `spacemacs/set-leader-keys-for-major-mode`
+  in your `dotspacemacs/user-config`.
+
 ## How it works
 
 The layer is deliberately thin; it delegates as much as possible to
