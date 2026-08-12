@@ -1,5 +1,10 @@
 # Spacemacs Flix layer
 
+> [!IMPORTANT]
+> This project has moved. Flix layer is now part of the Flix organization and is maintained at
+> [github.com/flix/spacemacs](https://github.com/flix/spacemacs).
+> This repository is archived; please use the new location.
+
 A [Spacemacs](https://www.spacemacs.org/) layer for the
 [Flix](https://flix.dev/) programming language.
 
