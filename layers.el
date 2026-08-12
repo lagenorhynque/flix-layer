@@ -1,8 +1,8 @@
 ;;; layers.el --- Flix layer dependencies -*- lexical-binding: t -*-
 
-;; Copyright (C) 2026 lagénorhynque
+;; Copyright (C) 2026 Kent OHASHI
 
-;; Author: lagénorhynque <ignorantia.juris.non.excusa@gmail.com>
+;; Author: Kent OHASHI <ignorantia.juris.non.excusa@gmail.com>
 ;; URL: https://github.com/lagenorhynque/flix-layer
 ;; License: GPL-3.0-or-later
 
