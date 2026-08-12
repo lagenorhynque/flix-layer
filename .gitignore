@@ -1,9 +1,0 @@
-# Emacs
-*.elc
-*~
-\#*\#
-.\#*
-
-# Flix compiler jars downloaded by flix-mode
-flix/
-*.jar
